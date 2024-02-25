@@ -1,0 +1,7 @@
+{
+  "baud": "9600",
+  "read_time_out": "1s",
+  "max_resend_times": "3",
+  "rev_buffer_wait_time_out": "1000",
+  "send_buffer_wait_time_out": "1000"
+}

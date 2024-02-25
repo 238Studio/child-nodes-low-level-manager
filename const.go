@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	configPath = "./config" //配置文件路径
+	configPath = "./configs" //配置文件路径
 
 	databaseConfig  = "database"
 	websocketConfig = "websocket"

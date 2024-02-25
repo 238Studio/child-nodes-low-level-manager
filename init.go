@@ -1,13 +1,14 @@
 package low
 
 import (
+	"strconv"
+	"time"
+
 	config "github.com/238Studio/child-nodes-config-service"
 	database "github.com/238Studio/child-nodes-database-service"
 	device "github.com/238Studio/child-nodes-device-service"
 	"github.com/238Studio/child-nodes-error-manager/errpack"
 	"github.com/238Studio/child-nodes-net-service/ws"
-	"strconv"
-	"time"
 )
 
 //初始化次序:配置文件管理器、数据库管理器、websocket(网络管理器)、设备管理器
@@ -17,7 +18,14 @@ import (
 // 传出:错误
 func InitLowLevel() {
 	initConfigService()
-	err := initDataBaseService()
+
+	//初始化配置文件
+	err := registerInitConfigService()
+	if err != nil {
+		panic(err)
+	}
+
+	err = initDataBaseService()
 	if err != nil {
 		panic(err)
 	}
@@ -40,6 +48,28 @@ func InitLowLevel() {
 // 传出:错误
 func initConfigService() {
 	configManger = config.InitConfigManager(configPath)
+}
+
+// 注册初始化配置文件
+// 传入:无
+// 传出:错误
+func registerInitConfigService() error {
+	err := configManger.InitModuleConfig(databaseConfig)
+	if err != nil {
+		return err
+	}
+
+	err = configManger.InitModuleConfig(websocketConfig)
+	if err != nil {
+		return err
+	}
+
+	err = configManger.InitModuleConfig(deviceConfig)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // 初始化数据库管理器
